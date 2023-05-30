@@ -11,6 +11,21 @@ logger = logging.getLogger(__file__)
 
 
 def get_product_list(page, campaign_id, access_token):
+    """Получить список товаров из Yandex
+
+    Args:
+        page (int): порядковый номер текущей страницы в выгружаемом пакете товара
+        campaign_id (str): идентификатор кампании,
+        access_token (str): API-ключ - оба уникальных значения продавца для Yandex,
+            о получении здесь -
+            https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
+
+    Returns:
+        словарь товаров - при положительном результате,
+        исключение - при ошибке
+
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -30,6 +45,21 @@ def get_product_list(page, campaign_id, access_token):
 
 
 def update_stocks(stocks, campaign_id, access_token):
+    """Обновить остатки товаров на Yandex
+
+    Args:
+        stocks (list): список массивов - информации об остатках,
+        campaign_id (str): идентификатор кампании,
+        access_token (str): API-ключ - оба уникальных значения продавца для Yandex,
+            о получении здесь -
+            https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
+
+    Returns:
+        словарь товаров - при положительном результате,
+        исключение - при ошибке
+
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -46,6 +76,21 @@ def update_stocks(stocks, campaign_id, access_token):
 
 
 def update_price(prices, campaign_id, access_token):
+    """Обновить цены товаров на Yandex
+
+    Args:
+        prices (list): список массивов - информации о ценах,
+        campaign_id (str): идентификатор кампании,
+        access_token (str): API-ключ - оба уникальных значения продавца для Yandex,
+            о получении здесь -
+            https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
+
+    Returns:
+        словарь цен - при положительном результате,
+        исключение - при ошибке
+
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -62,7 +107,20 @@ def update_price(prices, campaign_id, access_token):
 
 
 def get_offer_ids(campaign_id, market_token):
-    """Получить артикулы товаров Яндекс маркета"""
+    """Получить артикулы товаров Яндекс маркета
+
+    Args:
+        campaign_id (str): идентификатор кампании,
+        market_token (str): API-ключ - оба уникальных значения продавца для Yandex,
+            о получении здесь -
+            https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
+
+    Returns:
+        список артикулов товаров - при положительном результате,
+        исключение - при ошибке
+
+    """
+
     page = ""
     product_list = []
     while True:
@@ -78,6 +136,18 @@ def get_offer_ids(campaign_id, market_token):
 
 
 def create_stocks(watch_remnants, offer_ids, warehouse_id):
+    """Создаем информацию о текущих остатках
+
+    Args:
+        watch_remnants (dict): остатки часов с сайта Casio,
+        offer_ids (list): список артикулов товаров Yandex,
+        warehouse_id (str): идентификатор склада
+
+    Returns:
+        список текущих остатков, с учетом часов, отсутствующих у Casio, но имеющихся на Yandex
+
+    """
+
     # Уберем то, что не загружено в market
     stocks = list()
     date = str(datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z")
@@ -123,6 +193,17 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
 
 
 def create_prices(watch_remnants, offer_ids):
+    """Создание цен товаров, загруженных с Casio
+
+    Args:
+        watch_remnants (dict): остатки часов с сайта Casio,
+        offer_ids (list): список артикулов товаров Yandex
+
+    Returns:
+        список текущих цен часов, совпадающих с размещенными на Yandex
+
+    """
+
     prices = []
     for watch in watch_remnants:
         if str(watch.get("Код")) in offer_ids:
@@ -143,6 +224,20 @@ def create_prices(watch_remnants, offer_ids):
 
 
 async def upload_prices(watch_remnants, campaign_id, market_token):
+    """Получение арктикулов и обновление цен часов на Yandex
+
+    Args:
+        watch_remnants (dict): остатки часов с сайта Casio,
+        campaign_id (str): идентификатор кампании,
+        market_token (str): API-ключ - оба уникальных значения продавца для Yandex,
+            о получении здесь -
+            https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
+
+    Returns:
+        список текущих цен часов, совпадающих с размещенными на Yandex
+
+    """
+
     offer_ids = get_offer_ids(campaign_id, market_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_prices in list(divide(prices, 500)):
@@ -151,6 +246,22 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
 
 
 async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id):
+    """Получение арктикулов и обновление остатков часов на Yandex
+
+    Args:
+        watch_remnants (dict): остатки часов с сайта Casio,
+        campaign_id (str): идентификатор кампании,
+        market_token (str): API-ключ - оба уникальных значения продавца для Yandex,
+            о получении здесь -
+            https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
+        warehouse_id (str): идентификатор склада
+
+    Returns:
+        - список ненулевых текущих остатков часов, совпадающих с размещенными на Yandex
+        - список текущих остатков часов, совпадающих с размещенными на Yandex
+
+    """
+
     offer_ids = get_offer_ids(campaign_id, market_token)
     stocks = create_stocks(watch_remnants, offer_ids, warehouse_id)
     for some_stock in list(divide(stocks, 2000)):
