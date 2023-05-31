@@ -7,8 +7,8 @@ Cкрипт работы с маркетплейсом Озон и Casio (timewo
 - обновляет информацию о ценах и количестве имеющихся на складе часов на Озон.
 
 ## [market.py](market.py)
-Cкрипт работы с маркетплейсом Yandex и Casio (timeworld.ru) по моделям FBS и DBS.  
-(подробней https://yandex.ru/support/marketplace/introduction/models.html)  
+Cкрипт работы с маркетплейсом Yandex и Casio (timeworld.ru) по моделям FBS и DBS  
+[(ознакомиться):](https://yandex.ru/support/marketplace/introduction/models.html)  
 - скачивает с сайта Casio список остатков часов;
 - для каждой модели работы:
   - получает список товаров из Yandex маркета и формирует список их артикулов; 

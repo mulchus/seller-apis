@@ -15,14 +15,14 @@ def get_product_list(last_id, client_id, seller_token):
     """Получить список товаров магазина Озон
 
     Args:
-        last_id (int): значение ID последнего в текущем выгружаемом пакете товара
+        last_id (str): идентификатор последнего значения на выгружаемой странице
         client_id (str): ID клиента,
         seller_token (str): API-ключ - оба уникальных значения продавца для Ozon,
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
         
     Returns:
         словарь товаров - при положительном результате,
-        исключение - при ошибке
+        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке
 
     """
     url = "https://api-seller.ozon.ru/v2/product/list"
@@ -53,7 +53,7 @@ def get_offer_ids(client_id, seller_token):
 
     Returns:
         список артикулов товаров - при положительном результате,
-        исключение - при ошибке
+        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке
 
     """
     last_id = ""
@@ -127,7 +127,7 @@ def download_stock():
     """Скачать файл ostatki с сайта casio
 
     Returns:
-        результат обработки файла об остатках в виде словаря
+        (dict): результат обработки файла об остатках
 
     """
     # Скачать остатки с сайта
@@ -157,7 +157,7 @@ def create_stocks(watch_remnants, offer_ids):
         offer_ids (list): список артикулов товаров магазина Озон
 
     Returns:
-        список текущих остатков, с учетом часов, отсутствующих у Casio, но имеющихся на Ozon
+        (list): список текущих остатков, с учетом часов, отсутствующих у Casio, но имеющихся на Ozon
 
     """
     # Уберем то, что не загружено в seller
@@ -187,7 +187,7 @@ def create_prices(watch_remnants, offer_ids):
         offer_ids (list): список артикулов товаров магазина Озон
 
     Returns:
-        список текущих цен часов, совпадающих с размещенными на Ozon
+        (list): список текущих цен часов, совпадающих с размещенными на Ozon
 
     """
     prices = []
@@ -208,10 +208,10 @@ def price_conversion(price: str) -> str:
     """Преобразовать цену. Пример: 5'990.00 руб. -> 5990
 
     Args:
-        price (str): цена в строковом формате с указанием валюты из Casio
+        price (str): цена с указанием валюты
 
     Returns:
-        цена в строковом формате только из цифр
+        (str): цена только из цифр
 
     """
     return re.sub("[^0-9]", "", price.split(".")[0])
@@ -221,11 +221,11 @@ def divide(lst: list, n: int):
     """Разделить список lst на части по n элементов
 
     Args:
-        lst (list): некий список товаров
+        lst (list): некий список
         n (int): делитель
 
     Returns:
-        список списков товаров по n элементов в каждом
+        (list): список списков по n элементов в каждом
 
     """
     for i in range(0, len(lst), n):
@@ -242,7 +242,7 @@ async def upload_prices(watch_remnants, client_id, seller_token):
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
 
     Returns:
-        список текущих цен часов, совпадающих с размещенными на Ozon
+        (list): список текущих цен часов, совпадающих с размещенными на Ozon
 
     """
     offer_ids = get_offer_ids(client_id, seller_token)
@@ -262,8 +262,8 @@ async def upload_stocks(watch_remnants, client_id, seller_token):
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
 
     Returns:
-        - список ненулевых текущих остатков часов, совпадающих с размещенными на Ozon
-        - список текущих остатков часов, совпадающих с размещенными на Ozon
+        (list, list): список ненулевых текущих остатков часов, совпадающих с размещенными на Ozon,
+        список текущих остатков часов, совпадающих с размещенными на Ozon
 
     """
     offer_ids = get_offer_ids(client_id, seller_token)
