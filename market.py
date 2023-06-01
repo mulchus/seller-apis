@@ -21,8 +21,10 @@ def get_product_list(page, campaign_id, access_token):
             https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
 
     Returns:
-        (dict): товары - при положительном результате,
-        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке.
+        dict: товары
+
+    Raises:
+        ReadTimeout, ConnectionError или ERROR_2 (текст ошибки)
 
     """
 
@@ -55,8 +57,10 @@ def update_stocks(stocks, campaign_id, access_token):
             https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
 
     Returns:
-        (dict): товары - при положительном результате,
-        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке.
+        dict: товары
+
+    Raises:
+        ReadTimeout, ConnectionError или ERROR_2 (текст ошибки)
 
     """
 
@@ -86,8 +90,10 @@ def update_price(prices, campaign_id, access_token):
             https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
 
     Returns:
-        (dict): цены - при положительном результате,
-        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке.
+        dict: цены
+
+    Raises:
+        ReadTimeout, ConnectionError или ERROR_2 (текст ошибки)
 
     """
 
@@ -116,8 +122,10 @@ def get_offer_ids(campaign_id, market_token):
             https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
 
     Returns:
-        (list): список артикулов товаров - при положительном результате,
-        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке.
+        list: список артикулов товаров - при положительном результате
+
+    Raises:
+        ReadTimeout, ConnectionError или ERROR_2 (текст ошибки)
 
     """
 
@@ -144,7 +152,7 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
         warehouse_id (str): идентификатор склада
 
     Returns:
-        (list): список текущих остатков, с учетом часов, отсутствующих у Casio, но имеющихся на Yandex.
+        list: список текущих остатков, с учетом часов, отсутствующих у Casio, но имеющихся на Yandex.
 
     """
 
@@ -200,7 +208,7 @@ def create_prices(watch_remnants, offer_ids):
         offer_ids (list): список артикулов товаров Yandex
 
     Returns:
-        (list): список текущих цен часов, совпадающих с размещенными на Yandex.
+        list: список текущих цен часов, совпадающих с размещенными на Yandex.
 
     """
 
@@ -234,7 +242,7 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
             https://yandex.ru/dev/market/partner-api/doc/ru/concepts/authorization
 
     Returns:
-        (list): список текущих цен часов, совпадающих с размещенными на Yandex.
+        list: список текущих цен часов, совпадающих с размещенными на Yandex.
 
     """
 
@@ -257,7 +265,7 @@ async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id)
         warehouse_id (str): идентификатор склада
 
     Returns:
-        (list, list): список ненулевых текущих остатков часов, совпадающих с размещенными на Yandex,
+        list, list: список ненулевых текущих остатков часов, совпадающих с размещенными на Yandex,
         список текущих остатков часов, совпадающих с размещенными на Yandex.
 
     """
