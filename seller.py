@@ -21,8 +21,8 @@ def get_product_list(last_id, client_id, seller_token):
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
         
     Returns:
-        словарь товаров - при положительном результате,
-        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке
+        (dict): товары - при положительном результате,
+        исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке.
 
     """
     url = "https://api-seller.ozon.ru/v2/product/list"
@@ -52,7 +52,7 @@ def get_offer_ids(client_id, seller_token):
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
 
     Returns:
-        список артикулов товаров - при положительном результате,
+        (dict): список артикулов товаров - при положительном результате,
         исключение ReadTimeout, ConnectionError или ERROR_2 (текст ошибки) - при ошибке
 
     """
@@ -82,8 +82,7 @@ def update_price(prices: list, client_id, seller_token):
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
 
     Returns:
-        результат обновления - при положительном результате
-        информация об ошибках - при ошибках
+        (list): результат обновления, включая информацию при возникновении ошибок
 
     """
     url = "https://api-seller.ozon.ru/v1/product/import/prices"
@@ -108,8 +107,7 @@ def update_stocks(stocks: list, client_id, seller_token):
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
 
     Returns:
-        результат обновления - при положительном результате,
-        информация об ошибках - при ошибках
+        (list): результат обновления, включая информацию при возникновении ошибок
 
     """
     url = "https://api-seller.ozon.ru/v1/product/import/stocks"
@@ -127,7 +125,7 @@ def download_stock():
     """Скачать файл ostatki с сайта casio
 
     Returns:
-        (dict): результат обработки файла об остатках
+        (dict): результат обработки файла об остатках.
 
     """
     # Скачать остатки с сайта
@@ -157,7 +155,7 @@ def create_stocks(watch_remnants, offer_ids):
         offer_ids (list): список артикулов товаров магазина Озон
 
     Returns:
-        (list): список текущих остатков, с учетом часов, отсутствующих у Casio, но имеющихся на Ozon
+        (list): список текущих остатков, с учетом часов, отсутствующих у Casio, но имеющихся на Ozon.
 
     """
     # Уберем то, что не загружено в seller
@@ -187,7 +185,7 @@ def create_prices(watch_remnants, offer_ids):
         offer_ids (list): список артикулов товаров магазина Озон
 
     Returns:
-        (list): список текущих цен часов, совпадающих с размещенными на Ozon
+        (list): список текущих цен часов, совпадающих с размещенными на Ozon.
 
     """
     prices = []
@@ -211,7 +209,7 @@ def price_conversion(price: str) -> str:
         price (str): цена с указанием валюты
 
     Returns:
-        (str): цена только из цифр
+        (str): цена только из цифр.
 
     """
     return re.sub("[^0-9]", "", price.split(".")[0])
@@ -225,7 +223,7 @@ def divide(lst: list, n: int):
         n (int): делитель
 
     Returns:
-        (list): список списков по n элементов в каждом
+        (list): список списков по n элементов в каждом.
 
     """
     for i in range(0, len(lst), n):
@@ -242,7 +240,7 @@ async def upload_prices(watch_remnants, client_id, seller_token):
             о получении здесь - https://sellerstats.ru/help/api_key_ozon
 
     Returns:
-        (list): список текущих цен часов, совпадающих с размещенными на Ozon
+        (list): список текущих цен часов, совпадающих с размещенными на Ozon.
 
     """
     offer_ids = get_offer_ids(client_id, seller_token)
@@ -263,7 +261,7 @@ async def upload_stocks(watch_remnants, client_id, seller_token):
 
     Returns:
         (list, list): список ненулевых текущих остатков часов, совпадающих с размещенными на Ozon,
-        список текущих остатков часов, совпадающих с размещенными на Ozon
+        список текущих остатков часов, совпадающих с размещенными на Ozon.
 
     """
     offer_ids = get_offer_ids(client_id, seller_token)
